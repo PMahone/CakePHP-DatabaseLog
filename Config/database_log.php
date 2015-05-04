@@ -20,5 +20,6 @@ $config = array(
 	'DatabaseLog' => array(
 		'write' => 'default', // DataSource to write to.
 		'read' => 'default', // DataSource to read from.
-	)
+	),
+    'LogTypesToDatabase' => array('database') //an array with configTypes of logging. Is array is empty, everything is logged. Else only array items will be logged
 );

@@ -16,6 +16,8 @@ App::uses('CakeLogInterface', 'Log');
  */
 class DatabaseLog implements CakeLogInterface{
 
+	private $logTypes = array();
+	
 	/**
 	 * Model name placeholder
 	 */
@@ -32,6 +34,10 @@ class DatabaseLog implements CakeLogInterface{
 	public function __construct($options = array()) {
 		$this->model = isset($options['model']) ? $options['model'] : 'DatabaseLog.Log';
 		$this->Log = ClassRegistry::init($this->model);
+		
+		if (Configure::load('database_log')) {
+			$this->logTypes = Configure::read('LogTypesToDatabase');
+		}
 	}
 
 	/**
@@ -42,6 +48,12 @@ class DatabaseLog implements CakeLogInterface{
 	 * @return boolean Success
 	 */
 	public function write($type, $message) {
+		if(!empty($this->logTypes))
+        {
+            if(!in_array($type, $this->logTypes))
+                    return;
+        }
+		
 		$this->Log->create();
 		return (bool)$this->Log->save(array(
 			'type' => $type,
